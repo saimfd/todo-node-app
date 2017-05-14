@@ -22,8 +22,15 @@ app.get('/todos', function(req, res){
     filteredTodos = _.where(filteredTodos, {completed: false})
   } else if(queryParams.hasOwnProperty('completed')){
     res.json({'error': "Completed query can only be true or false"})
-  } else {
-    res.json(filteredTodos);
+  }
+
+  if(queryParams.hasOwnProperty('q')){
+    var query = queryParams.q.toLowerCase();
+    filteredTodos = _.filter(filteredTodos, function(filteredTodo){
+      if(filteredTodo.description.toLowerCase().indexOf(query) > 0){
+        return filteredTodo
+      }
+    })
   }
 
   res.json(filteredTodos);
